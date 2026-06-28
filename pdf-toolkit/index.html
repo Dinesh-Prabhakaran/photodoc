@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PDF Pro – Enterprise PDF Toolkit by Dinesh Prabhakaran</title>
+<meta name="application-name" content="PDF Pro">
+<meta name="description" content="Professional PDF tools by Dinesh Prabhakaran – merge, split, compress, convert, protect. 100% in your browser.">
+<meta name="theme-color" content="#1E1E1E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PDF Pro">
+<meta name="msapplication-TileColor" content="#1473E6">
+<meta name="msapplication-config" content="none">
+<meta property="og:title" content="PDF Pro – Enterprise PDF Toolkit">
+<meta property="og:description" content="Merge, split, compress and convert PDFs in your browser.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PDF Pro">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231473E6'/%3E%3Cpath d='M9 6h10l6 6v14H9V6z' fill='white' opacity='.92'/%3E%3Cpath d='M19 6l6 6h-6V6z' fill='%23A0C8F8'/%3E%3Ctext x='11' y='22' font-family='Arial' font-weight='900' font-size='7.5' fill='%231473E6'%3EPDF%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%231473E6'/%3E%3Cpath d='M50 28h60l40 40v84H50V28z' fill='white' opacity='.92'/%3E%3Ctext x='64' y='122' font-family='Arial' font-weight='900' font-size='40' fill='%231473E6'%3EPDF%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22PDF+Pro%22%2C%22short_name%22%3A%22PDF+Pro%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231E1E1E%22%2C%22theme_color%22%3A%22%231473E6%22%2C%22categories%22%3A%5B%22productivity%22%5D%7D">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+:root{--th:64px;--fh:44px;--sw:242px;--r1:6px;--r2:10px;--r3:14px;--ct:#1E1E1E;--cs:#242424;--cb:#2C2C2C;--cf:#323232;--cH:#3A3A3A;--bo:rgba(255,255,255,.07);--bh:rgba(255,255,255,.13);--t1:#fff;--t2:rgba(255,255,255,.58);--t3:rgba(255,255,255,.32);--bl:#1473E6;--blh:#2680EB;--bld:#0D66D0;--a:#1473E6;--rgb:20,115,230;--ez:cubic-bezier(.4,0,.2,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--cb);color:var(--t1);height:100dvh;overflow:hidden;display:grid;grid-template:var(--th) 1fr var(--fh)/var(--sw) 1fr;grid-template-areas:"bar bar" "nav main" "ftr ftr"}
+#topbar{grid-area:bar;background:var(--ct);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:200;position:relative;min-height:var(--th)}
+#topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(20,115,230,.45) 35%,rgba(20,115,230,.45) 65%,transparent)}
+.brand{display:flex;align-items:center;gap:10px;user-select:none}
+.bico{width:42px;height:42px;border-radius:10px;filter:drop-shadow(0 0 10px rgba(20,115,230,.55));flex-shrink:0}
+.bname{font-size:16.5px;font-weight:800;color:#fff;letter-spacing:-.35px}
+.pro{display:inline-flex;align-items:center;padding:2px 8px;background:linear-gradient(135deg,#FFCE44,#F59500 55%,#E07000);border-radius:4px;font-size:9px;font-weight:900;letter-spacing:.1em;color:#2B1A00;text-transform:uppercase;box-shadow:0 0 12px rgba(247,183,49,.45),inset 0 1px 0 rgba(255,255,255,.35)}
+.tsep{width:1px;height:22px;background:var(--bh);flex-shrink:0}
+.ttag{font-size:11.5px;color:var(--t3)}
+.tright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:var(--r1);border:1px solid var(--bh);background:var(--cf);color:var(--t2);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .2s var(--ez);font-family:inherit}
+.tbtn:hover{background:var(--cH);color:var(--t1);border-color:rgba(255,255,255,.18)}
+.tbtn.pri{background:linear-gradient(135deg,var(--bl),var(--bld));border-color:transparent;color:#fff;box-shadow:0 0 18px rgba(20,115,230,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+.tbtn.pri:hover{box-shadow:0 0 28px rgba(20,115,230,.6),inset 0 1px 0 rgba(255,255,255,.2);transform:translateY(-1px)}
+.hmb{display:none;flex-direction:column;gap:4.5px;background:none;border:none;cursor:pointer;padding:6px;border-radius:var(--r1);transition:background .18s}
+.hmb:hover{background:var(--cf)}
+.hmb span{width:20px;height:2px;background:var(--t2);border-radius:1px;display:block;transition:all .25s var(--ez)}
+.hmb.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hmb.open span:nth-child(2){opacity:0}
+.hmb.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+#sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:190}
+#sb-ov.open{display:block}
+#sidebar{grid-area:nav;background:var(--cs);border-right:1px solid var(--bo);display:flex;flex-direction:column;overflow-y:auto;padding:10px 0 24px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.sgl{padding:16px 16px 5px;font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--t3)}
+.si{display:flex;align-items:center;gap:10px;padding:8.5px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .17s var(--ez);margin:1px 0;border-radius:0 var(--r1) var(--r1) 0}
+.si:hover{background:rgba(255,255,255,.04)}
+.si.on{background:rgba(255,255,255,.065);border-left-color:var(--ia,var(--bl))}
+.si.on .sil{color:var(--t1);font-weight:600}
+.si.on .sin{opacity:1;color:var(--ia,var(--bl))}
+.sin{width:17px;height:17px;flex-shrink:0;opacity:.5;transition:opacity .17s}
+.sil{font-size:13px;color:var(--t2);font-weight:450;transition:color .17s}
+#main{grid-area:main;overflow-y:auto;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.07) transparent}
+.panel{display:none;flex-direction:column;flex:1;padding:28px 34px 36px;max-width:880px;width:100%;margin:0 auto;animation:fadeUp .22s var(--ez)}
+.panel.on{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.th{display:flex;align-items:flex-start;gap:16px;margin-bottom:26px}
+.tib{width:50px;height:50px;border-radius:var(--r2);background:rgba(var(--rgb),.13);border:1px solid rgba(var(--rgb),.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 18px rgba(var(--rgb),.12)}
+.tt{font-size:21px;font-weight:800;color:var(--t1);letter-spacing:-.4px}
+.td{font-size:13px;color:var(--t2);margin-top:4px;line-height:1.55}
+.card{background:var(--cf);border-radius:var(--r3);border:1px solid var(--bo)}
+.card+.card{margin-top:14px}
+.ch{padding:12px 20px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em}
+.cd{width:6px;height:6px;border-radius:50%;background:var(--a);box-shadow:0 0 7px rgba(var(--rgb),.75)}
+.cb{padding:20px}
+.dz{border:2px dashed rgba(var(--rgb),.28);border-radius:var(--r3);padding:38px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;cursor:pointer;transition:all .25s var(--ez);position:relative;overflow:hidden;background:rgba(var(--rgb),.025);text-align:center}
+.dz::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,rgba(var(--rgb),.08) 0%,transparent 65%);opacity:0;transition:opacity .3s}
+.dz:hover,.dz.drag-over{border-color:rgba(var(--rgb),.65);background:rgba(var(--rgb),.055)}
+.dz:hover::before,.dz.drag-over::before{opacity:1}
+.dz.drag-over{box-shadow:0 0 0 4px rgba(var(--rgb),.16),inset 0 0 36px rgba(var(--rgb),.05)}
+.di{width:54px;height:54px;border-radius:13px;background:rgba(var(--rgb),.11);border:1px solid rgba(var(--rgb),.2);display:flex;align-items:center;justify-content:center;transition:transform .25s var(--ez),box-shadow .25s var(--ez)}
+.dz:hover .di,.dz.drag-over .di{transform:scale(1.07);box-shadow:0 0 22px rgba(var(--rgb),.3)}
+.dt{font-size:14.5px;font-weight:600;color:var(--t1)}
+.ds{font-size:12px;color:var(--t3)}
+.db{margin-top:2px;padding:7px 20px;border-radius:var(--r1);border:1px solid rgba(var(--rgb),.38);background:rgba(var(--rgb),.09);color:var(--a);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .2s var(--ez);font-family:inherit}
+.db:hover{background:rgba(var(--rgb),.2);border-color:rgba(var(--rgb),.65);box-shadow:0 0 14px rgba(var(--rgb),.25)}
+.fl{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.fi{display:flex;align-items:center;gap:11px;padding:9px 13px;background:var(--cH);border-radius:var(--r1);border:1px solid var(--bo);animation:fadeUp .2s var(--ez)}
+.fiw{width:30px;height:30px;border-radius:6px;background:rgba(var(--rgb),.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fn{font-size:13px;font-weight:500;color:var(--t1);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fsz{font-size:11px;color:var(--t3);flex-shrink:0}
+.fx{width:20px;height:20px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;flex-shrink:0;transition:all .17s;font-family:inherit}
+.fx:hover{background:rgba(229,57,53,.22);color:#EF5350}
+.og2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.og{display:flex;flex-direction:column;gap:6px}
+.og.full{grid-column:1/-1}
+.ol{font-size:10.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.09em}
+.oi,.os{background:var(--cb);border:1px solid var(--bh);border-radius:var(--r1);padding:8px 12px;color:var(--t1);font-size:13.5px;font-family:inherit;outline:none;transition:all .18s;-webkit-appearance:none;appearance:none}
+.oi:focus,.os:focus{border-color:rgba(var(--rgb),.55);box-shadow:0 0 0 3px rgba(var(--rgb),.11)}
+.os{cursor:pointer}
+.cr{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.cr input{width:15px;height:15px;accent-color:var(--a);cursor:pointer;flex-shrink:0}
+.cr span{font-size:13px;color:var(--t2)}
+.run{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--r2);border:none;background:linear-gradient(135deg,var(--a) 0%,color-mix(in srgb,var(--a) 72%,#000) 100%);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s var(--ez);box-shadow:0 4px 22px rgba(var(--rgb),.38),0 1px 0 rgba(255,255,255,.15) inset;letter-spacing:.01em;font-family:inherit}
+.run:hover:not(:disabled){box-shadow:0 6px 32px rgba(var(--rgb),.58),0 1px 0 rgba(255,255,255,.2) inset;transform:translateY(-1.5px)}
+.run:active:not(:disabled){transform:translateY(0);box-shadow:0 2px 12px rgba(var(--rgb),.4)}
+.run:disabled{opacity:.42;cursor:not-allowed}
+.run.loading{pointer-events:none}
+.run svg{width:17px;height:17px;flex-shrink:0}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.28);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pg{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:12px;display:none}
+.pg.vis{display:block}
+.pb{height:100%;background:linear-gradient(90deg,var(--a),color-mix(in srgb,var(--a) 80%,#fff));border-radius:2px;width:0%;transition:width .3s var(--ez);box-shadow:0 0 8px rgba(var(--rgb),.55)}
+.out{margin-top:14px;display:none}
+.out.vis{display:block}
+.oi2{display:flex;align-items:center;gap:11px;padding:11px 15px;background:rgba(var(--rgb),.055);border:1px solid rgba(var(--rgb),.18);border-radius:var(--r1);margin-top:8px;animation:fadeUp .2s var(--ez)}
+.on2{font-size:13px;font-weight:500;color:var(--t1);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.osz{font-size:11px;color:var(--t3);flex-shrink:0}
+.dl{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:var(--r1);border:1px solid rgba(var(--rgb),.45);background:rgba(var(--rgb),.1);color:var(--a);font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .18s;flex-shrink:0}
+.dl:hover{background:rgba(var(--rgb),.22);box-shadow:0 0 14px rgba(var(--rgb),.3)}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.iw{position:relative;border-radius:var(--r1);overflow:hidden;border:1px solid var(--bo);aspect-ratio:3/4;background:var(--cb);animation:fadeUp .22s var(--ez)}
+.iw img{width:100%;height:100%;object-fit:cover}
+.ilb{position:absolute;bottom:0;left:0;right:0;padding:4px 7px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);font-size:10px;color:rgba(255,255,255,.7);text-align:center}
+.idl{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;transition:all .18s}
+.idl:hover{background:var(--a);box-shadow:0 0 10px rgba(var(--rgb),.5)}
+.txo{background:var(--cb);border:1px solid var(--bh);border-radius:var(--r1);padding:14px;font-size:12px;color:var(--t2);line-height:1.75;font-family:'SF Mono','Fira Code',Consolas,monospace;max-height:280px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.bn{display:flex;gap:10px;align-items:flex-start;padding:11px 15px;background:rgba(20,115,230,.07);border:1px solid rgba(20,115,230,.18);border-radius:var(--r1);margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.55}
+.bn svg{flex-shrink:0;margin-top:1px;color:#4fa0f5;width:14px;height:14px}
+#toasts{position:fixed;bottom:66px;right:22px;display:flex;flex-direction:column-reverse;gap:9px;z-index:9999;pointer-events:none}
+.toast{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;min-width:270px;max-width:370px;border-radius:var(--r2);background:rgba(28,28,28,.88);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04) inset;pointer-events:all;transform:translateX(calc(100% + 24px));opacity:0;transition:transform .34s var(--ez),opacity .34s var(--ez)}
+.toast.vis{transform:translateX(0);opacity:1}
+.toast.out{transform:translateX(calc(100% + 24px));opacity:0}
+.tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ts .tdot{background:#26C281;box-shadow:0 0 8px rgba(38,194,129,.65)}
+.te .tdot{background:#E53935;box-shadow:0 0 8px rgba(229,57,53,.65)}
+.ti .tdot{background:#1473E6;box-shadow:0 0 8px rgba(20,115,230,.65)}
+.tw .tdot{background:#F5A623;box-shadow:0 0 8px rgba(245,166,35,.65)}
+.tbw{flex:1}
+.ttt{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.tmg{font-size:12px;color:var(--t2);line-height:1.5}
+.tx{background:none;border:none;color:var(--t3);cursor:pointer;font-size:17px;line-height:1;padding:0;flex-shrink:0;transition:color .15s;font-family:inherit}
+.tx:hover{color:var(--t1)}
+.mt14{margin-top:14px}
+.hidden{display:none!important}
+/* Footer */
+#app-footer{grid-area:ftr;background:var(--ct);border-top:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;z-index:100;position:relative}
+#app-footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(20,115,230,.3) 35%,rgba(20,115,230,.3) 65%,transparent)}
+.ftr-brand{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ftr-name{font-size:12px;font-weight:600;color:var(--t3)}
+.ftr-mid{font-size:11px;color:var(--t3);text-align:center;flex:1;opacity:.7}
+.ftr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ftr-pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--t3);padding:3px 9px;border:1px solid var(--bo);border-radius:100px}
+@media(max-width:720px){
+  body{grid-template:var(--th) 1fr var(--fh)/1fr;grid-template-areas:"bar""main""ftr"}
+  #topbar{padding:0 14px}
+  .hmb{display:flex}
+  .tright .tbtn:not(.pri){display:none}
+  #sidebar{position:fixed;left:-260px;top:0;bottom:0;width:242px;z-index:200;transition:left .28s var(--ez);padding-top:calc(var(--th) + 10px)}
+  #sidebar.open{left:0}
+  .ftr-right{display:none}
+  .ftr-mid{font-size:10px}
+}
+@media(max-width:400px){
+  .panel{padding:12px 10px 22px}
+}
+</style>
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">
+    <svg class="bico" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="42" height="42" rx="10" fill="#1473E6" fill-opacity=".9"/>
+      <path d="M9 7h15l11 10v19H9V7z" fill="white" fill-opacity=".88"/>
+      <path d="M24 7l11 10H24V7z" fill="#B8D8FF" fill-opacity=".65"/>
+      <rect x="13" y="19" width="12" height="1.8" rx=".9" fill="#1473E6"/>
+      <rect x="13" y="23" width="9" height="1.8" rx=".9" fill="#1473E6"/>
+      <rect x="9" y="30" width="17" height="6.5" rx="2" fill="#0D5FBE"/>
+      <text x="17.5" y="36" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="5.5" fill="white" letter-spacing=".5">PDF</text>
+    </svg>
+    <div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="bname">PDF Pro</span>
+        <span class="pro">PRO</span>
+      </div>
+      <div style="font-size:10.5px;color:rgba(255,255,255,.38);letter-spacing:.04em;margin-top:1px">Enterprise Document Toolkit</div>
+    </div>
+  </div>
+  <div class="tsep"></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.35)"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/></svg>
+    <span class="ttag">11 PDF tools</span>
+  </div>
+  <div class="tright">
+    <button class="hmb" id="hmb" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+    <button class="tbtn" onclick="toast('Privacy','All PDF operations run 100% locally — your files never leave this browser.','info')">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1l6 3v4c0 4-2.5 6.5-6 7.5C5.5 14.5 3 12 3 8V4l5-3z" stroke="currentColor" stroke-width="1.5"/></svg>
+      Secure &amp; Private
+    </button>
+    <button class="tbtn pri" onclick="toast('PDF Pro v3.0','11 tools. Built by Dinesh Prabhakaran. Zero server uploads.','success')">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8.5l2 2 3-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      v3.0
+    </button>
+  </div>
+</header>
+<div id="sb-ov" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sgl">Transform</div>
+  <div class="si on" data-t="merge" style="--ia:#1473E6">
+    <svg class="sin" viewBox="0 0 20 20" fill="currentColor" style="color:#1473E6"><path d="M3 3h6v10H3V3zm2 2v6h2V5H5z" opacity=".5"/><path d="M9 5h8v12H9V5zm2 2v8h4V7h-4z"/></svg>
+    <span class="sil">Merge PDFs</span>
+  </div>
+  <div class="si" data-t="split" style="--ia:#F7501C">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#F7501C"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M10 3v14M3 10h14" stroke-linecap="round" opacity=".6"/></svg>
+    <span class="sil">Split PDF</span>
+  </div>
+  <div class="si" data-t="compress" style="--ia:#26C281">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" style="color:#26C281"><path d="M10 3v14M6 7l4-4 4 4M6 13l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="sil">Compress PDF</span>
+  </div>
+  <div class="sgl">Convert</div>
+  <div class="si" data-t="p2i" style="--ia:#9B59B6">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#9B59B6"><rect x="3" y="4" width="12" height="13" rx="1.5"/><circle cx="10" cy="9" r="1.5" fill="#9B59B6" stroke="none"/><path d="M6.5 14l2-3 2 3 1.5-2 2 2H6.5z" fill="#9B59B6" stroke="none"/></svg>
+    <span class="sil">PDF → Images</span>
+  </div>
+  <div class="si" data-t="i2p" style="--ia:#E91E8C">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#E91E8C"><rect x="2" y="6" width="9" height="9" rx="1.5"/><rect x="8" y="4" width="9" height="9" rx="1.5"/></svg>
+    <span class="sil">Images → PDF</span>
+  </div>
+  <div class="si" data-t="docx2pdf" style="--ia:#4F7FD6">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#4F7FD6"><rect x="3" y="2" width="11" height="16" rx="1.5"/><path d="M14 2l3 3v13" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/><path d="M6 7h5M6 10h5M6 13h3" stroke-linecap="round"/></svg>
+    <span class="sil">DOCX → PDF</span>
+  </div>
+  <div class="sgl">Edit</div>
+  <div class="si" data-t="rotate" style="--ia:#17A5CE">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#17A5CE"><path d="M4 10a6 6 0 1 0 6-6" stroke-linecap="round"/><path d="M10 4V2L7 5l3 3V6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="sil">Rotate Pages</span>
+  </div>
+  <div class="si" data-t="watermark" style="--ia:#5C6BC0">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#5C6BC0"><path d="M3 17L17 3" stroke-linecap="round"/><path d="M6 14l1.5-3L9 14M6.6 12.7h1.8M11 10l1.5-3L14 10M11.6 8.7h1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+    <span class="sil">Add Watermark</span>
+  </div>
+  <div class="sgl">Extract &amp; Security</div>
+  <div class="si" data-t="extract" style="--ia:#F5A623">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#F5A623"><rect x="4" y="3" width="12" height="14" rx="2"/><path d="M7 7h6M7 10h6M7 13h4" stroke-linecap="round"/></svg>
+    <span class="sil">Extract Text</span>
+  </div>
+  <div class="si" data-t="protect" style="--ia:#E53935">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#E53935"><path d="M10 2l7 3.5v4c0 4-3 6.5-7 7.5-4-1-7-3.5-7-7.5V5.5L10 2z"/><path d="M7.5 10l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="sil">Protect PDF</span>
+  </div>
+  <div class="si" data-t="unlock" style="--ia:#8D6E63">
+    <svg class="sin" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" style="color:#8D6E63"><rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V7a3 3 0 0 1 6 0" stroke-linecap="round"/></svg>
+    <span class="sil">Unlock PDF</span>
+  </div>
+</nav>
+<main id="main"></main>
+<div id="toasts"></div>
+<footer id="app-footer">
+  <div class="ftr-brand">
+    <svg width="18" height="18" viewBox="0 0 42 42" fill="none"><rect width="42" height="42" rx="10" fill="#1473E6" fill-opacity=".8"/><path d="M9 7h15l11 10v19H9V7z" fill="white" fill-opacity=".85"/><path d="M24 7l11 10H24V7z" fill="#B8D8FF" fill-opacity=".6"/><rect x="9" y="30" width="17" height="7.5" rx="2" fill="#0D5FBE"/><text x="17.5" y="36" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="5.5" fill="white" letter-spacing=".5">PDF</text></svg>
+    <span class="ftr-name">PDF Pro &mdash; Enterprise Toolkit &nbsp;&bull;&nbsp; <span style="font-weight:400;opacity:.75">by Dinesh Prabhakaran</span></span>
+  </div>
+  <div class="ftr-mid">&copy; 2025 Dinesh Prabhakaran &nbsp;&middot;&nbsp; All PDF processing is local &nbsp;&middot;&nbsp; Your files never leave your device</div>
+  <div class="ftr-right">
+    <span class="ftr-pill">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="10" height="10"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4z"/></svg>
+      pdf-lib &amp; PDF.js
+    </span>
+    <span class="ftr-pill">
+      <svg viewBox="0 0 16 16" fill="none" width="10" height="10"><path d="M8 1l6 3v4c0 4-2.5 6.5-6 7.5C5.5 14.5 3 12 3 8V4l5-3z" stroke="currentColor" stroke-width="1.5"/></svg>
+      100% Offline
+    </span>
+    <span class="ftr-pill">v3.0</span>
+  </div>
+</footer>
+<script>
+// ── PDF library setup ─────────────────────────────────────────────
+const {PDFDocument,degrees,rgb,StandardFonts} = PDFLib;
+if(typeof pdfjsLib!=='undefined')
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── Icon constants ────────────────────────────────────────────────
+const INFO_ICO=`<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>`;
+const DL_ICO=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+const PDF_ICO=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--a);width:15px;height:15px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linecap="round"/><path d="M14 2v6h6" stroke-linecap="round"/></svg>`;
+const IMG_ICO=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--a);width:15px;height:15px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const DOC_ICO=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--a);width:15px;height:15px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 9h8M8 13h8M8 17h5" stroke-linecap="round"/></svg>`;
+
+// ── Tools array (11 tools) ────────────────────────────────────────
+const TOOLS=[
+  {id:'merge',acc:'#1473E6',rgb:'20,115,230',label:'Merge PDFs',
+   desc:'Combine multiple PDF files into a single document.',
+   dzText:'Drop PDF files here',dzSub:'Multiple files \u00b7 drag to reorder',
+   multi:true,type:'pdf',
+   opts:`<div class="og"><div class="ol">Output filename</div><input class="oi" id="merge-name" value="merged.pdf"/></div><div class="og"><div class="ol">Order</div><select class="os" id="merge-order"><option value="listed">As listed</option><option value="alpha">Alphabetical</option></select></div>`,
+   runLabel:'Merge PDFs',
+   ip:`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 12v6M9 15l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'split',acc:'#F7501C',rgb:'247,80,28',label:'Split PDF',
+   desc:'Extract pages or page ranges into separate files.',
+   dzText:'Drop a PDF file here',dzSub:'Single PDF accepted',
+   multi:false,type:'pdf',
+   opts:`<div class="og"><div class="ol">Mode</div><select class="os" id="split-mode" onchange="splitUI()"><option value="every">Every page (individual files)</option><option value="range">Custom page ranges</option><option value="first">First N pages</option></select></div><div class="og" id="sp-rg"><div class="ol">Ranges <span style="opacity:.45;font-weight:400">(e.g. 1-3, 5)</span></div><input class="oi" id="split-ranges" placeholder="1-3, 5, 8-10"/></div><div class="og hidden" id="sp-ng"><div class="ol">Number of pages</div><input class="oi" id="split-n" type="number" min="1" value="1"/></div>`,
+   runLabel:'Split PDF',
+   ip:`<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18M3 12h18" stroke-linecap="round" opacity=".6"/>`},
+  {id:'compress',acc:'#26C281',rgb:'38,194,129',label:'Compress PDF',
+   desc:'Reduce file size by optimising PDF structure and removing redundant data.',
+   dzText:'Drop a PDF file here',dzSub:'Single PDF',
+   multi:false,type:'pdf',
+   banner:'Browser compression re-serialises PDF structure \u2014 most effective on text-heavy documents. For image-heavy PDFs server-side tools achieve greater reduction.',
+   opts:`<div class="og"><div class="ol">Level</div><select class="os" id="compress-level"><option value="low">Low \u2013 max quality</option><option value="medium" selected>Medium \u2013 balanced</option><option value="high">High \u2013 smallest size</option></select></div><div class="og"><div class="ol">Filename</div><input class="oi" id="compress-name" value="compressed.pdf"/></div>`,
+   runLabel:'Compress PDF',
+   ip:`<path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'p2i',acc:'#9B59B6',rgb:'155,89,182',label:'PDF \u2192 Images',
+   desc:'Render each PDF page as a high-resolution PNG or JPEG image.',
+   dzText:'Drop a PDF file here',dzSub:'Each page becomes an image',
+   multi:false,type:'pdf',hasProg:true,hasImgGrid:true,
+   opts:`<div class="og"><div class="ol">Resolution</div><select class="os" id="p2i-dpi"><option value="1">96 DPI (screen)</option><option value="1.5">144 DPI</option><option value="2" selected>192 DPI (print)</option><option value="3">288 DPI (hi-res)</option></select></div><div class="og"><div class="ol">Format</div><select class="os" id="p2i-fmt"><option value="image/png">PNG (lossless)</option><option value="image/jpeg">JPEG (smaller)</option></select></div>`,
+   runLabel:'Convert to Images',
+   ip:`<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'i2p',acc:'#E91E8C',rgb:'233,30,140',label:'Images \u2192 PDF',
+   desc:'Combine JPG, PNG or WebP images into a single PDF document.',
+   dzText:'Drop image files here',dzSub:'JPG, PNG, WebP \u00b7 multiple OK',
+   multi:true,type:'image',
+   opts:`<div class="og"><div class="ol">Page size</div><select class="os" id="i2p-size"><option value="fit">Fit image (no whitespace)</option><option value="a4">A4 (297 \u00d7 210 mm)</option><option value="letter">Letter (11 \u00d7 8.5 in)</option></select></div><div class="og"><div class="ol">Filename</div><input class="oi" id="i2p-name" value="images.pdf"/></div>`,
+   runLabel:'Create PDF',
+   ip:`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6" stroke-linecap="round"/><circle cx="8.5" cy="13.5" r="1.5"/><path d="M20 17l-3.5-3.5L12 19H5v-7" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'docx2pdf',acc:'#4F7FD6',rgb:'79,127,214',label:'DOCX \u2192 PDF',
+   desc:'Convert Word documents (.docx / .doc) to PDF. Text, headings and layout preserved.',
+   dzText:'Drop a Word document here',dzSub:'.docx and .doc files accepted',
+   multi:false,type:'docx',
+   opts:`<div class="og"><div class="ol">Page size</div><select class="os" id="d2p-size"><option value="letter">Letter (8.5 \u00d7 11 in)</option><option value="a4">A4 (210 \u00d7 297 mm)</option></select></div><div class="og"><div class="ol">Font size</div><select class="os" id="d2p-fsize"><option value="11">11 pt \u2014 Normal</option><option value="10">10 pt \u2014 Compact</option><option value="12">12 pt \u2014 Large</option></select></div><div class="og"><div class="ol">Margins</div><select class="os" id="d2p-margin"><option value="72">Normal (1 in)</option><option value="54">Narrow (0.75 in)</option><option value="90">Wide (1.25 in)</option></select></div><div class="og"><div class="ol">Filename</div><input class="oi" id="d2p-name" value="converted.pdf"/></div>`,
+   runLabel:'Convert to PDF',
+   ip:`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 9h8M8 13h6M8 17h4" stroke-linecap="round"/>`},
+  {id:'extract',acc:'#F5A623',rgb:'245,166,35',label:'Extract Text',
+   desc:'Pull all readable text from a PDF. Export as TXT, HTML or DOCX.',
+   dzText:'Drop a PDF file here',dzSub:'Works best with selectable-text PDFs',
+   multi:false,type:'pdf',hasTextOut:true,
+   opts:``,
+   runLabel:'Extract Text',
+   ip:`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke-linecap="round"/>`},
+  {id:'rotate',acc:'#17A5CE',rgb:'23,165,206',label:'Rotate Pages',
+   desc:'Rotate all or specific pages in a PDF by 90\u00b0, 180\u00b0 or 270\u00b0.',
+   dzText:'Drop a PDF file here',dzSub:'or click to select a file',
+   multi:false,type:'pdf',
+   opts:`<div class="og"><div class="ol">Angle</div><select class="os" id="rotate-angle"><option value="90">90\u00b0 clockwise</option><option value="180">180\u00b0 (upside down)</option><option value="270">270\u00b0 counter-clockwise</option></select></div><div class="og"><div class="ol">Apply to</div><select class="os" id="rotate-scope" onchange="rotUI()"><option value="all">All pages</option><option value="odd">Odd pages</option><option value="even">Even pages</option><option value="range">Custom range</option></select></div><div class="og hidden" id="rot-rg"><div class="ol">Page range</div><input class="oi" id="rotate-range" placeholder="1-3, 5"/></div><div class="og"><div class="ol">Filename</div><input class="oi" id="rotate-name" value="rotated.pdf"/></div>`,
+   runLabel:'Rotate Pages',
+   ip:`<path d="M4 12a8 8 0 1 0 8-8" stroke-linecap="round"/><path d="M12 4V2l-4 4 4 4V8" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'watermark',acc:'#5C6BC0',rgb:'92,107,192',label:'Add Watermark',
+   desc:'Overlay a text watermark on every page. Customise opacity, size and angle.',
+   dzText:'Drop a PDF file here',dzSub:'Watermark added to every page',
+   multi:false,type:'pdf',
+   opts:`<div class="og"><div class="ol">Watermark text</div><input class="oi" id="wm-text" value="CONFIDENTIAL"/></div><div class="og"><div class="ol">Font size</div><input class="oi" id="wm-size" type="number" value="48" min="10" max="200"/></div><div class="og"><div class="ol">Opacity (0\u20131)</div><input class="oi" id="wm-opacity" type="number" value="0.15" min="0.01" max="1" step="0.01"/></div><div class="og"><div class="ol">Rotation (\u00b0)</div><input class="oi" id="wm-rotation" type="number" value="45" min="-180" max="180"/></div><div class="og"><div class="ol">Filename</div><input class="oi" id="wm-name" value="watermarked.pdf"/></div>`,
+   runLabel:'Add Watermark',
+   ip:`<path d="M4 20L20 4" stroke-linecap="round"/><path d="M7 16l2-4 2 4M7.8 14.4h2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 12l2-4 2 4M13.8 10.4h2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>`},
+  {id:'protect',acc:'#E53935',rgb:'229,57,53',label:'Protect PDF',
+   desc:'Password-protect a PDF with RC4-128 encryption. Set open & owner passwords and permissions.',
+   dzText:'Drop a PDF file here',dzSub:'or click to browse',
+   multi:false,type:'pdf',
+   opts:`<div class="og full"><div class="ol">Open password <span style="color:var(--t3);font-size:10.5px">(required to open the file)</span></div><input class="oi" id="protect-userpwd" type="password" placeholder="Password to lock the PDF\u2026"/></div><div class="og full"><div class="ol">Permissions password <span style="color:var(--t3);font-size:10.5px">(owner \u2014 optional)</span></div><input class="oi" id="protect-ownerpwd" type="password" placeholder="Leave blank to use open password"/></div><div class="og full"><div class="ol">Permissions</div><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px"><label class="cr"><input type="checkbox" id="protect-print" checked/><span>Allow printing</span></label><label class="cr"><input type="checkbox" id="protect-copy"/><span>Allow text copy</span></label><label class="cr"><input type="checkbox" id="protect-edit"/><span>Allow editing</span></label></div></div><div class="og"><div class="ol">Document title</div><input class="oi" id="protect-title" placeholder="My Confidential Document"/></div><div class="og"><div class="ol">Author</div><input class="oi" id="protect-author" placeholder="Dinesh Prabhakaran"/></div><div class="og"><div class="ol">Filename</div><input class="oi" id="protect-name" value="protected.pdf"/></div>`,
+   runLabel:'Encrypt &amp; Download',
+   ip:`<path d="M12 2l8 4v6c0 5-3.5 9-8 10C7.5 21 4 17 4 12V6l8-4z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:'unlock',acc:'#8D6E63',rgb:'141,110,99',label:'Unlock PDF',
+   desc:'Remove restrictions from a password-protected PDF you own.',
+   dzText:'Drop a protected PDF here',dzSub:'or click to select',
+   multi:false,type:'pdf',
+   opts:`<div class="og"><div class="ol">PDF password</div><input class="oi" id="unlock-pwd" type="password" placeholder="Enter document password"/></div><div class="og"><div class="ol">Filename</div><input class="oi" id="unlock-name" value="unlocked.pdf"/></div>`,
+   runLabel:'Unlock &amp; Download',
+   ip:`<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1" stroke-linecap="round"/>`}
+];
+
+// ── Panel generator ───────────────────────────────────────────────
+function mkPanel(t){
+  const p=document.createElement('div');
+  p.className='panel';p.id='panel-'+t.id;
+  p.style.cssText='--a:'+t.acc+';--rgb:'+t.rgb;
+  const banner=t.banner?`<div class="bn">${INFO_ICO}<span>${t.banner}</span></div>`:'';
+  const optsH=t.opts?`<div class="og2">${t.opts}</div>`:'';
+  const progH=t.hasProg?`<div class="pg" id="pg-${t.id}"><div class="pb" id="pb-${t.id}"></div></div>`:'';
+  let outBody;
+  if(t.hasImgGrid) outBody=`<div class="ig" id="ig-${t.id}"></div>`;
+  else if(t.hasTextOut) outBody=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><button class="db" onclick="cpyText()">Copy</button><button class="db" onclick="dlText()">.TXT</button><button class="db" onclick="dlHtml()">.HTML</button><button class="db" onclick="dlDocx()">.DOCX</button></div><div class="txo" id="txo-${t.id}"></div>`;
+  else outBody=`<div class="fl" id="olist-${t.id}"></div>`;
+  const icon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--a);width:24px;height:24px">${t.ip}</svg>`;
+  const acc=t.type==='pdf'?'.pdf,application/pdf':t.type==='docx'?'.docx,.doc':'image/*';
+  p.innerHTML=`
+    <div class="th"><div class="tib">${icon}</div><div><div class="tt">${t.label}</div><div class="td">${t.desc}</div></div></div>
+    <div class="card"><div class="ch"><div class="cd"></div>${t.multi?'Source Files':'Source File'}</div>
+    <div class="cb"><div class="dz" id="dz-${t.id}">
+      <div class="di">${icon}</div>
+      <div class="dt">${t.dzText}</div><div class="ds">${t.dzSub}</div>
+      <button class="db" data-inp="inp-${t.id}" data-multi="${t.multi}">Browse</button>
+    </div>
+    <input type="file" id="inp-${t.id}" accept="${acc}" ${t.multi?'multiple':''} hidden/>
+    <div class="fl" id="fl-${t.id}"></div></div></div>
+    ${banner}
+    <div class="card"><div class="ch"><div class="cd"></div>Options</div><div class="cb">
+      ${optsH}
+      <button class="run mt14" id="btn-${t.id}">${icon} ${t.runLabel}</button>
+      ${progH}
+      <div class="out" id="out-${t.id}">${outBody}</div>
+    </div></div>`;
+  p.querySelector('.db[data-inp]').addEventListener('click',()=>document.getElementById(p.querySelector('[data-inp]').dataset.inp).click());
+  return p;
+}
+
+const $main=document.getElementById('main');
+TOOLS.forEach(t=>$main.appendChild(mkPanel(t)));
+
+// ── Navigation ────────────────────────────────────────────────────
+document.getElementById('panel-merge').classList.add('on');
+document.querySelectorAll('.si').forEach(s=>{
+  s.addEventListener('click',()=>{
+    document.querySelectorAll('.si').forEach(i=>i.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+    s.classList.add('on');
+    document.getElementById('panel-'+s.dataset.t).classList.add('on');
+  });
+});
+
+// ── Toast ─────────────────────────────────────────────────────────
+function toast(title,msg='',type='info',dur=5000){
+  const c=document.getElementById('toasts');
+  const el=document.createElement('div');
+  el.className=`toast t${type[0]}`;
+  el.innerHTML=`<div class="tdot"></div><div class="tbw"><div class="ttt">${title}</div>${msg?`<div class="tmg">${msg}</div>`:''}</div><button class="tx" onclick="this.parentElement.classList.add('out');setTimeout(()=>this.parentElement.remove(),380)">&times;</button>`;
+  c.appendChild(el);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('vis')));
+  if(dur>0)setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),380);},dur);
+}
+
+// ── State & utilities ─────────────────────────────────────────────
+const S={};
+TOOLS.forEach(t=>S[t.id]=t.multi?{files:[]}:{file:null});
+let extractedText='';
+
+const fmtB=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(2)+' MB';
+const readAB=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsArrayBuffer(f);});
+function addOutFile(toolId,name,bytes){
+  const out=document.getElementById('out-'+toolId);
+  const lst=document.getElementById('olist-'+toolId);
+  out.classList.add('vis');
+  const url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  const el=document.createElement('div');
+  el.className='oi2';
+  el.innerHTML=`${PDF_ICO}<span class="on2">${name}</span><span class="osz">${fmtB(bytes.length)}</span><a class="dl" href="${url}" download="${name}">${DL_ICO} Download</a>`;
+  lst.appendChild(el);
+}
+function addFileRow(listId,file,type='pdf'){
+  const el=document.createElement('div');
+  el.className='fi';el.dataset.name=file.name;
+  const ico=type==='image'?IMG_ICO:type==='docx'?DOC_ICO:PDF_ICO;
+  el.innerHTML=`<div class="fiw">${ico}</div><span class="fn">${file.name}</span><span class="fsz">${fmtB(file.size)}</span><button class="fx" onclick="rmFile(this)">&times;</button>`;
+  document.getElementById(listId).appendChild(el);
+}
+function rmFile(btn){
+  const el=btn.closest('.fi'),name=el.dataset.name;
+  const tid=el.parentElement.id.replace('fl-','');
+  if(S[tid].files)S[tid].files=S[tid].files.filter(f=>f.name!==name);
+  else S[tid].file=null;
+  el.remove();
+}
+function setLoad(id,on){
+  const b=document.getElementById('btn-'+id);
+  if(on){b.disabled=true;b.classList.add('loading');b.innerHTML=`<div class="spin"></div> Processing\u2026`;}
+  else{b.disabled=false;b.classList.remove('loading');const t=TOOLS.find(x=>x.id===id);b.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--a);width:17px;height:17px">${t.ip}</svg> ${t.runLabel}`;}
+}
+function loadImg(blob){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(blob);});}
+function parseRange(str,tot){
+  const pg=new Set();
+  str.split(',').forEach(p=>{p=p.trim();if(p.includes('-')){const[a,b]=p.split('-').map(Number);for(let i=a;i<=Math.min(b,tot);i++)pg.add(i);}else if(p){const n=Number(p);if(n>=1&&n<=tot)pg.add(n);}});
+  return[...pg].sort((a,b)=>a-b);
+}
+
+// ── Drop zone wiring ──────────────────────────────────────────────
+function setupDz(id,toolId,multi,type){
+  const dz=document.getElementById('dz-'+id);
+  const inp=document.getElementById('inp-'+id);
+  const handle=files=>{
+    const v=files.filter(f=>
+      type==='pdf'?(f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf')):
+      type==='docx'?(f.name.toLowerCase().endsWith('.docx')||f.name.toLowerCase().endsWith('.doc')||f.type.includes('word')):
+      f.type.startsWith('image/')
+    );
+    const label=type==='pdf'?'PDF':type==='docx'?'Word document (.docx/.doc)':'image';
+    if(!v.length){toast('No valid files','Expected '+label+' files.','error');return;}
+    if(multi){v.forEach(f=>{if(!S[toolId].files.find(x=>x.name===f.name)){S[toolId].files.push(f);addFileRow('fl-'+id,f,type);}});}
+    else{S[toolId].file=v[0];document.getElementById('fl-'+id).innerHTML='';addFileRow('fl-'+id,v[0],type);}
+    toast('File added',v[0].name,'info',3000);
+  };
+  dz.addEventListener('dragenter',e=>{e.preventDefault();dz.classList.add('drag-over');});
+  dz.addEventListener('dragleave',e=>{if(!dz.contains(e.relatedTarget))dz.classList.remove('drag-over');});
+  dz.addEventListener('dragover',e=>e.preventDefault());
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');handle(Array.from(e.dataTransfer.files));});
+  inp.addEventListener('change',()=>{handle(Array.from(inp.files));inp.value='';});
+  dz.addEventListener('click',e=>{if(!e.target.closest('[data-inp]'))inp.click();});
+}
+TOOLS.forEach(t=>setupDz(t.id,t.id,t.multi,t.type));
+
+// ── UI helpers ────────────────────────────────────────────────────
+function splitUI(){const m=document.getElementById('split-mode').value;document.getElementById('sp-rg').classList.toggle('hidden',m!=='range');document.getElementById('sp-ng').classList.toggle('hidden',m!=='first');}
+function rotUI(){document.getElementById('rot-rg').classList.toggle('hidden',document.getElementById('rotate-scope').value!=='range');}
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-ov'),hmb=document.getElementById('hmb');
+  sb.classList.toggle('open');ov.classList.toggle('open');hmb.classList.toggle('open');
+}
+document.querySelectorAll('.si').forEach(s=>{
+  s.addEventListener('click',()=>{if(window.innerWidth<=720)toggleSidebar();});
+});
+
+// ── MERGE ─────────────────────────────────────────────────────────
+document.getElementById('btn-merge').addEventListener('click',async()=>{
+  if(S.merge.files.length<2){toast('Not enough files','Add at least 2 PDF files.','error');return;}
+  setLoad('merge',true);
+  try{
+    let files=[...S.merge.files];
+    if(document.getElementById('merge-order').value==='alpha')files.sort((a,b)=>a.name.localeCompare(b.name));
+    const out=await PDFDocument.create();
+    for(const f of files){const d=await PDFDocument.load(await readAB(f),{ignoreEncryption:true});const pg=await out.copyPages(d,d.getPageIndices());pg.forEach(p=>out.addPage(p));}
+    const bytes=await out.save(),name=document.getElementById('merge-name').value||'merged.pdf';
+    document.getElementById('olist-merge').innerHTML='';
+    addOutFile('merge',name,bytes);
+    toast('Merge complete',files.length+' files merged.','success');
+  }catch(e){toast('Merge failed',e.message,'error');}
+  finally{setLoad('merge',false);}
+});
+
+// ── SPLIT ─────────────────────────────────────────────────────────
+document.getElementById('btn-split').addEventListener('click',async()=>{
+  if(!S.split.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('split',true);
+  try{
+    const pdf=await PDFDocument.load(await readAB(S.split.file),{ignoreEncryption:true});
+    const tot=pdf.getPageCount(),mode=document.getElementById('split-mode').value;
+    let ranges=[];
+    if(mode==='every'){for(let i=0;i<tot;i++)ranges.push([i]);}
+    else if(mode==='range'){
+      document.getElementById('split-ranges').value.split(',').forEach(p=>{p=p.trim();if(p.includes('-')){const[a,b]=p.split('-').map(Number);const r=[];for(let i=a;i<=Math.min(b,tot);i++)r.push(i-1);if(r.length)ranges.push(r);}else if(p){const n=Number(p);if(n>=1&&n<=tot)ranges.push([n-1]);}});
+    }else{const n=Math.min(parseInt(document.getElementById('split-n').value)||1,tot);ranges.push([...Array(n).keys()]);if(tot>n)ranges.push([...Array(tot-n).keys()].map(i=>i+n));}
+    document.getElementById('olist-split').innerHTML='';
+    document.getElementById('out-split').classList.remove('vis');
+    for(let i=0;i<ranges.length;i++){const d=await PDFDocument.create();const c=await d.copyPages(pdf,ranges[i]);c.forEach(p=>d.addPage(p));addOutFile('split','part_'+(i+1)+'.pdf',await d.save());}
+    toast('Split complete',ranges.length+' file'+(ranges.length>1?'s':'')+' created.','success');
+  }catch(e){toast('Split failed',e.message,'error');}
+  finally{setLoad('split',false);}
+});
+
+// ── COMPRESS ──────────────────────────────────────────────────────
+document.getElementById('btn-compress').addEventListener('click',async()=>{
+  if(!S.compress.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('compress',true);
+  try{
+    const pdf=await PDFDocument.load(await readAB(S.compress.file),{ignoreEncryption:true});
+    const bytes=await pdf.save({useObjectStreams:true,addDefaultPage:false,objectsPerTick:50});
+    const name=document.getElementById('compress-name').value||'compressed.pdf';
+    document.getElementById('olist-compress').innerHTML='';
+    addOutFile('compress',name,bytes);
+    const pct=Math.max(0,((S.compress.file.size-bytes.length)/S.compress.file.size*100)).toFixed(1);
+    toast('Done',fmtB(S.compress.file.size)+' \u2192 '+fmtB(bytes.length)+' ('+pct+'% reduction)','success',7000);
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('compress',false);}
+});
+
+// ── PDF → IMAGES ──────────────────────────────────────────────────
+document.getElementById('btn-p2i').addEventListener('click',async()=>{
+  if(!S.p2i.file){toast('No file','Add a PDF file.','error');return;}
+  if(typeof pdfjsLib==='undefined'){toast('Loading','PDF.js not ready, try again.','warn');return;}
+  setLoad('p2i',true);
+  const pg=document.getElementById('pg-p2i'),pb=document.getElementById('pb-p2i');
+  pg.classList.add('vis');pb.style.width='0%';
+  const grid=document.getElementById('ig-p2i');grid.innerHTML='';
+  document.getElementById('out-p2i').classList.remove('vis');
+  try{
+    const scale=parseFloat(document.getElementById('p2i-dpi').value)||2;
+    const fmt=document.getElementById('p2i-fmt').value;
+    const ext=fmt==='image/jpeg'?'jpg':'png';
+    const doc=await pdfjsLib.getDocument({data:await readAB(S.p2i.file)}).promise;
+    document.getElementById('out-p2i').classList.add('vis');
+    for(let i=1;i<=doc.numPages;i++){
+      const page=await doc.getPage(i);
+      const vp=page.getViewport({scale});
+      const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+      await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+      const url=c.toDataURL(fmt,0.92);
+      const fname='page_'+String(i).padStart(3,'0')+'.'+ext;
+      const w=document.createElement('div');w.className='iw';
+      w.innerHTML=`<img src="${url}" alt="Page ${i}"/><div class="ilb">Page ${i} of ${doc.numPages}</div><a class="idl" href="${url}" download="${fname}" title="Download">${DL_ICO}</a>`;
+      grid.appendChild(w);
+      pb.style.width=(i/doc.numPages*100)+'%';
+    }
+    toast('Done',doc.numPages+' page'+(doc.numPages>1?'s':'')+' exported as '+ext.toUpperCase(),'success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('p2i',false);setTimeout(()=>pg.classList.remove('vis'),1200);}
+});
+
+// ── IMAGES → PDF ──────────────────────────────────────────────────
+document.getElementById('btn-i2p').addEventListener('click',async()=>{
+  if(!S.i2p.files.length){toast('No images','Add image files.','error');return;}
+  setLoad('i2p',true);
+  try{
+    const pdf=await PDFDocument.create();
+    const sz=document.getElementById('i2p-size').value;
+    for(const f of S.i2p.files){
+      const buf=await readAB(f);let img;
+      if(f.type==='image/jpeg'||f.name.toLowerCase().match(/\.(jpg|jpeg)$/))img=await pdf.embedJpg(buf);
+      else{try{img=await pdf.embedPng(buf);}catch{const cv=document.createElement('canvas');const im=await loadImg(new Blob([buf],{type:f.type}));cv.width=im.width;cv.height=im.height;cv.getContext('2d').drawImage(im,0,0);img=await pdf.embedPng(await(await fetch(cv.toDataURL('image/png'))).arrayBuffer());}}
+      const{width:iw,height:ih}=img;
+      let pw=iw,ph=ih;
+      if(sz==='a4'){pw=595.28;ph=841.89;}else if(sz==='letter'){pw=612;ph=792;}
+      const page=pdf.addPage([pw,ph]);
+      const s=Math.min(pw/iw,ph/ih);
+      page.drawImage(img,{x:(pw-iw*s)/2,y:(ph-ih*s)/2,width:iw*s,height:ih*s});
+    }
+    const bytes=await pdf.save(),name=document.getElementById('i2p-name').value||'images.pdf';
+    document.getElementById('olist-i2p').innerHTML='';
+    addOutFile('i2p',name,bytes);
+    toast('PDF created',S.i2p.files.length+' image'+(S.i2p.files.length>1?'s':'')+' \u2192 '+name,'success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('i2p',false);}
+});
+
+// ── EXTRACT TEXT ──────────────────────────────────────────────────
+document.getElementById('btn-extract').addEventListener('click',async()=>{
+  if(!S.extract.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('extract',true);
+  try{
+    const doc=await pdfjsLib.getDocument({data:await readAB(S.extract.file)}).promise;
+    const lines=[];
+    for(let i=1;i<=doc.numPages;i++){const pg=await doc.getPage(i);const tc=await pg.getTextContent();lines.push('--- Page '+i+' ---');lines.push(tc.items.map(x=>x.str).join(' '));lines.push('');}
+    extractedText=lines.join('\n');
+    document.getElementById('txo-extract').textContent=extractedText;
+    document.getElementById('out-extract').classList.add('vis');
+    toast('Extracted',doc.numPages+' pages, '+extractedText.length+' chars','success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('extract',false);}
+});
+function cpyText(){if(!extractedText){toast('Nothing to copy','','warn',2000);return;}navigator.clipboard.writeText(extractedText).then(()=>toast('Copied','Text copied to clipboard.','success',2500)).catch(()=>toast('Failed','Clipboard access blocked.','error'));}
+function dlText(){if(!extractedText){toast('Nothing to download','','warn',2000);return;}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([extractedText],{type:'text/plain'}));a.download='extracted_text.txt';a.click();}
+function dlHtml(){
+  if(!extractedText){toast('Nothing to download','','warn',2000);return;}
+  const htm='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Extracted Text</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 24px;line-height:1.75;color:#222}p{margin:0 0 .8em}</style></head><body>'+extractedText.split('\n').map(l=>'<p>'+(l||'&nbsp;')+'</p>').join('')+'</body></html>';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([htm],{type:'text/html'}));a.download='extracted_text.html';a.click();
+}
+async function dlDocx(){
+  if(!extractedText){toast('Nothing to download','','warn',2000);return;}
+  if(typeof JSZip==='undefined'){toast('Loading','JSZip not ready, try again.','warn');return;}
+  try{
+    const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    const paras=extractedText.split('\n').map(l=>`<w:p><w:pPr><w:spacing w:after="120"/></w:pPr>${l?`<w:r><w:t xml:space="preserve">${esc(l)}</w:t></w:r>`:''}</w:p>`).join('');
+    const docXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${paras}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800"/></w:sectPr></w:body></w:document>`;
+    const zip=new JSZip();
+    zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+    zip.file('_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+    zip.file('word/document.xml',docXml);
+    zip.file('word/_rels/document.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>');
+    const bytes=await zip.generateAsync({type:'uint8array'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}));a.download='extracted_text.docx';a.click();
+    toast('DOCX ready','Saved as Word document.','success');
+  }catch(e){toast('Failed',e.message,'error');}
+}
+
+// ── ROTATE ────────────────────────────────────────────────────────
+document.getElementById('btn-rotate').addEventListener('click',async()=>{
+  if(!S.rotate.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('rotate',true);
+  try{
+    const pdf=await PDFDocument.load(await readAB(S.rotate.file),{ignoreEncryption:true});
+    const tot=pdf.getPageCount(),ang=parseInt(document.getElementById('rotate-angle').value);
+    const scope=document.getElementById('rotate-scope').value;
+    let idxs;
+    if(scope==='all')idxs=[...Array(tot).keys()];
+    else if(scope==='odd')idxs=[...Array(tot).keys()].filter(i=>i%2===0);
+    else if(scope==='even')idxs=[...Array(tot).keys()].filter(i=>i%2===1);
+    else idxs=parseRange(document.getElementById('rotate-range').value,tot).map(n=>n-1);
+    idxs.forEach(i=>{const p=pdf.getPage(i);p.setRotation(degrees((p.getRotation().angle+ang)%360));});
+    const bytes=await pdf.save(),name=document.getElementById('rotate-name').value||'rotated.pdf';
+    document.getElementById('olist-rotate').innerHTML='';
+    addOutFile('rotate',name,bytes);
+    toast('Done',idxs.length+' page'+(idxs.length>1?'s':'')+' rotated by '+ang+'\u00b0','success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('rotate',false);}
+});
+
+// ── WATERMARK ─────────────────────────────────────────────────────
+document.getElementById('btn-watermark').addEventListener('click',async()=>{
+  if(!S.watermark.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('watermark',true);
+  try{
+    const pdf=await PDFDocument.load(await readAB(S.watermark.file),{ignoreEncryption:true});
+    const font=await pdf.embedFont(StandardFonts.HelveticaBold);
+    const txt=document.getElementById('wm-text').value||'CONFIDENTIAL';
+    const sz=parseFloat(document.getElementById('wm-size').value)||48;
+    const op=Math.min(1,Math.max(0,parseFloat(document.getElementById('wm-opacity').value)||0.15));
+    const rot=parseFloat(document.getElementById('wm-rotation').value)||45;
+    pdf.getPages().forEach(pg=>{
+      const{width:w,height:h}=pg.getSize();
+      pg.drawText(txt,{x:(w-font.widthOfTextAtSize(txt,sz))/2,y:h/2-sz/2,size:sz,font,color:rgb(.5,.5,.5),opacity:op,rotate:degrees(rot)});
+    });
+    const bytes=await pdf.save(),name=document.getElementById('wm-name').value||'watermarked.pdf';
+    document.getElementById('olist-watermark').innerHTML='';
+    addOutFile('watermark',name,bytes);
+    toast('Watermark applied','"'+txt+'" on all pages','success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('watermark',false);}
+});
+
+// ── UNLOCK ────────────────────────────────────────────────────────
+document.getElementById('btn-unlock').addEventListener('click',async()=>{
+  if(!S.unlock.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('unlock',true);
+  try{
+    const pwd=document.getElementById('unlock-pwd').value;
+    const pdf=await PDFDocument.load(await readAB(S.unlock.file),{ignoreEncryption:true,password:pwd||undefined});
+    const bytes=await pdf.save(),name=document.getElementById('unlock-name').value||'unlocked.pdf';
+    document.getElementById('olist-unlock').innerHTML='';
+    addOutFile('unlock',name,bytes);
+    toast('Unlocked','PDF re-saved without restrictions.','success');
+  }catch(e){toast('Unlock failed',e.message.includes('password')?'Incorrect password or unsupported encryption.':e.message,'error');}
+  finally{setLoad('unlock',false);}
+});
+
+// ── DOCX → PDF ────────────────────────────────────────────────────
+document.getElementById('btn-docx2pdf').addEventListener('click',async()=>{
+  if(!S.docx2pdf.file){toast('No file','Drop a .docx or .doc file.','error');return;}
+  if(typeof mammoth==='undefined'){toast('Loading\u2026','mammoth.js is initialising, try again.','warn');return;}
+  setLoad('docx2pdf',true);
+  try{
+    const buf=await readAB(S.docx2pdf.file);
+    const{value:rawText}=await mammoth.extractRawText({arrayBuffer:buf});
+    if(!rawText.trim()){toast('Empty doc','No readable text found in document.','warn');setLoad('docx2pdf',false);return;}
+    const sz=document.getElementById('d2p-size').value;
+    const fs=parseInt(document.getElementById('d2p-fsize').value)||11;
+    const mg=parseInt(document.getElementById('d2p-margin').value)||72;
+    const[W,H]=sz==='a4'?[595.28,841.89]:[612,792];
+    const doc=await PDFDocument.create();
+    const font=await doc.embedFont(StandardFonts.TimesRoman);
+    const bFont=await doc.embedFont(StandardFonts.TimesRomanBold);
+    const tw=W-mg*2;
+    let page=doc.addPage([W,H]),y=H-mg;
+    const nl=()=>{page=doc.addPage([W,H]);y=H-mg;};
+    const dline=(txt,f,s,gap)=>{if(y-s<mg)nl();page.drawText(txt,{x:mg,y,size:s,font:f,color:rgb(0,0,0)});y-=s+(gap!=null?gap:s*0.45);};
+    const wrap=(line,f,s)=>{
+      const words=line.split(/[ \t]+/);let cur='';
+      for(const w of words){const test=cur?cur+' '+w:w;if(f.widthOfTextAtSize(test,s)>tw&&cur){dline(cur,f,s,s*0.22);cur=w;}else cur=test;}
+      if(cur)dline(cur,f,s);
+    };
+    for(const line of rawText.split('\n')){
+      const t=line.trim();
+      if(!t){y-=fs*0.55;continue;}
+      const isH=t.length<90&&t===t.toUpperCase()&&/[A-Z]/.test(t);
+      wrap(t,isH?bFont:font,isH?fs+3:fs);
+    }
+    const bytes=await doc.save();
+    const name=document.getElementById('d2p-name').value||S.docx2pdf.file.name.replace(/\.docx?$/i,'.pdf');
+    document.getElementById('olist-docx2pdf').innerHTML='';
+    addOutFile('docx2pdf',name,bytes);
+    toast('Converted',doc.getPageCount()+' page PDF generated.','success');
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('docx2pdf',false);}
+});
+
+// ── PDF RC4-128 ENCRYPTION (Standard Security Handler v2/r3) ──────
+const _PP=new Uint8Array([0x28,0xBF,0x4E,0x5E,0x4E,0x75,0x8A,0x41,0x64,0x00,0x4E,0x56,0xFF,0xFA,0x01,0x08,0x2E,0x2E,0x00,0xB6,0xD0,0x68,0x3E,0x80,0x2F,0x0C,0xA9,0xFE,0x64,0x53,0x69,0x7A]);
+function _rc4(k,d){const S=Uint8Array.from({length:256},(_,i)=>i);let j=0;for(let i=0;i<256;i++){j=(j+S[i]+k[i%k.length])&255;[S[i],S[j]]=[S[j],S[i]];}const o=new Uint8Array(d.length);let x=0,y=0;for(let i=0;i<d.length;i++){x=(x+1)&255;y=(y+S[x])&255;[S[x],S[y]]=[S[y],S[x]];o[i]=d[i]^S[(S[x]+S[y])&255];}return o;}
+function _md5(u){
+  const d=[...(u instanceof Uint8Array?u:new TextEncoder().encode(u))];
+  const l=d.length;d.push(128);while(d.length%64!==56)d.push(0);
+  for(let i=0;i<8;i++)d.push(Math.floor(l*8/Math.pow(2,i*8))&255);
+  const K=Array.from({length:64},(_,i)=>(Math.abs(Math.sin(i+1))*0x100000000)>>>0);
+  const SH=[7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  let a=0x67452301,b=0xEFCDAB89,c=0x98BADCFE,e=0x10325476;
+  for(let q=0;q<d.length;q+=64){
+    const M=Array.from({length:16},(_,i)=>d[q+i*4]|(d[q+i*4+1]<<8)|(d[q+i*4+2]<<16)|(d[q+i*4+3]<<24));
+    let[A,B,C,D]=[a,b,c,e];
+    for(let i=0;i<64;i++){
+      let f,g;if(i<16){f=(B&C)|(~B&D);g=i;}else if(i<32){f=(D&B)|(~D&C);g=(5*i+1)%16;}else if(i<48){f=B^C^D;g=(3*i+5)%16;}else{f=C^(B|~D);g=(7*i)%16;}
+      const t=((f>>>0)+(A>>>0)+(K[i]>>>0)+(M[g]>>>0))>>>0;A=D;D=C;C=B;B=(B+((t<<SH[i])|(t>>>(32-SH[i]))))>>>0;
+    }
+    a=(a+A)>>>0;b=(b+B)>>>0;c=(c+C)>>>0;e=(e+D)>>>0;
+  }
+  const r=new Uint8Array(16),v=new DataView(r.buffer);v.setUint32(0,a,true);v.setUint32(4,b,true);v.setUint32(8,c,true);v.setUint32(12,e,true);return r;
+}
+function _padP(s){const b=new TextEncoder().encode(s),o=new Uint8Array(32);o.set(b.slice(0,32));if(b.length<32)o.set(_PP.slice(0,32-b.length),b.length);return o;}
+function _ownerKey(op,up){let k=_md5(_padP(op||up));for(let i=0;i<50;i++)k=_md5(k);let r=_rc4(k.slice(0,16),_padP(up));for(let i=1;i<=19;i++)r=_rc4(k.map(b=>b^i),r);return r;}
+function _fileKey(up,ok,P,id){const d=new Uint8Array([..._padP(up),...ok,P&255,(P>>8)&255,(P>>16)&255,(P>>24)&255,...id]);let k=_md5(d);for(let i=0;i<50;i++)k=_md5(k);return k.slice(0,16);}
+function _userKey(fk,id){const d=new Uint8Array([..._PP,...id]);let u=_md5(d);u=_rc4(fk,u);for(let i=1;i<=19;i++)u=_rc4(fk.map(b=>b^i),u);const r=new Uint8Array(32);r.set(u);return r;}
+function _objKey(fk,n,g){return _md5(new Uint8Array([...fk,n&255,(n>>8)&255,(n>>16)&255,g&255,(g>>8)&255])).slice(0,Math.min(fk.length+5,16));}
+async function _encryptPDF(pdfBytes,up,op,P){
+  const ps=Array.from(pdfBytes,b=>String.fromCharCode(b)).join('');
+  const fid=crypto.getRandomValues(new Uint8Array(16));
+  const ok=_ownerKey(op||up,up),fk=_fileKey(up,ok,P,fid),uk=_userKey(fk,fid);
+  const bytes=new Uint8Array(pdfBytes);
+  // Encrypt each object's stream content using per-object RC4 key
+  let oi=0,maxN=1;
+  while(oi<ps.length){
+    const jp=ps.indexOf(' obj',oi);if(jp<0)break;
+    let wb=jp-1;while(wb>0&&ps[wb]!=='\n'&&ps[wb]!=='\r')wb--;
+    const hdr=ps.slice(wb+1,jp).trim().split(' ');
+    if(hdr.length<2||isNaN(hdr[0])){oi=jp+1;continue;}
+    const n=parseInt(hdr[0]),g=parseInt(hdr[1]||'0');
+    maxN=Math.max(maxN,n);
+    const key=_objKey(fk,n,g);
+    const ep=ps.indexOf('endobj',jp);if(ep<0){oi=jp+1;continue;}
+    // Find stream keyword followed by newline
+    let si=-1,sp=jp;
+    while(sp<ep){
+      const idx=ps.indexOf('stream',sp);if(idx<0||idx>=ep)break;
+      const c=ps[idx+6];if(c==='\n'||c==='\r'){si=idx;break;}sp=idx+1;
+    }
+    if(si>=0){
+      let cs=si+6;if(ps[cs]==='\r')cs++;if(ps[cs]==='\n')cs++;
+      const es=ps.indexOf('\nendstream',cs);
+      if(es>0&&es<ep+60)bytes.set(_rc4(key,bytes.slice(cs,es)),cs);
+    }
+    oi=ep+6;
+  }
+  // Build /Encrypt object and append as incremental PDF update
+  const h=a=>Array.from(a,b=>b.toString(16).padStart(2,'0')).join('');
+  const en=maxN+1;
+  let rootRef='1 0 R';
+  const ri=ps.lastIndexOf('/Root ');
+  if(ri>=0){const re2=ps.indexOf(' R',ri+7);if(re2>0)rootRef=ps.slice(ri+6,re2).trim()+' 0 R';}
+  let osx=0;
+  const sxi=ps.lastIndexOf('\nstartxref\n');
+  if(sxi>=0){const el=ps.indexOf('\n',sxi+11);if(el>0)osx=parseInt(ps.slice(sxi+11,el))||0;}
+  const eo=`${en} 0 obj\n<<\n/Filter /Standard\n/V 2\n/R 3\n/Length 128\n/P ${P}\n/O <${h(ok)}>\n/U <${h(uk)}>\n>>\nendobj\n`;
+  const off=bytes.length;
+  const xr=`xref\n${en} 1\n${off.toString().padStart(10,'0')} 00000 n \ntrailer\n<<\n/Size ${en+1}\n/Root ${rootRef}\n/Prev ${osx}\n/Encrypt ${en} 0 R\n/ID [<${h(fid)}><${h(fid)}>]\n>>\nstartxref\n${off+eo.length}\n%%EOF`;
+  const app=new Uint8Array([...(eo+xr)].map(c=>c.charCodeAt(0)&255));
+  const out=new Uint8Array(bytes.length+app.length);out.set(bytes);out.set(app,bytes.length);
+  return out;
+}
+
+// ── PROTECT (with real RC4-128 encryption) ────────────────────────
+document.getElementById('btn-protect').addEventListener('click',async()=>{
+  if(!S.protect.file){toast('No file','Add a PDF file.','error');return;}
+  setLoad('protect',true);
+  try{
+    const up=document.getElementById('protect-userpwd').value.trim();
+    const op=document.getElementById('protect-ownerpwd').value.trim();
+    const title=document.getElementById('protect-title').value;
+    const author=document.getElementById('protect-author').value;
+    const name=document.getElementById('protect-name').value||'protected.pdf';
+    const pdf=await PDFDocument.load(await readAB(S.protect.file),{ignoreEncryption:true});
+    if(title)pdf.setTitle(title);if(author)pdf.setAuthor(author);
+    pdf.setCreator('PDF Pro \u2014 by Dinesh Prabhakaran');pdf.setModificationDate(new Date());
+    document.getElementById('olist-protect').innerHTML='';
+    if(!up){
+      addOutFile('protect',name,await pdf.save());
+      toast('Saved','Metadata updated. Enter an open password above to encrypt.','info',7000);
+    }else{
+      let P=0xFFFFF0C0|0; // base: all restricted
+      if(document.getElementById('protect-print').checked)P|=4|512;   // allow print
+      if(document.getElementById('protect-copy').checked) P|=16;       // allow copy
+      if(document.getElementById('protect-edit').checked) P|=8;        // allow modify
+      const clean=await pdf.save({useObjectStreams:false});
+      const enc=await _encryptPDF(clean,up,op||up,P);
+      addOutFile('protect',name,enc);
+      toast('Password set','RC4-128 encryption applied. Open password required to view.','success',7000);
+    }
+  }catch(e){toast('Failed',e.message,'error');}
+  finally{setLoad('protect',false);}
+});
+
+// ── Init ──────────────────────────────────────────────────────────
+setTimeout(()=>toast('PDF Pro ready','11 tools. By Dinesh Prabhakaran. Runs locally. Files stay on your device.','success',5000),600);
+</script>
+</body>
+</html>
