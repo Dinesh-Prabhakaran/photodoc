@@ -1,5 +1,5 @@
-/* PhotoDoc service worker — offline caching */
-const CACHE = 'photodoc-v2';
+/* PhotoDoc service worker — network-first for fresh updates, cache fallback for offline */
+const CACHE = 'photodoc-v3';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
@@ -15,17 +15,33 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.open(CACHE).then(cache =>
-      cache.match(e.request).then(hit => {
-        const net = fetch(e.request).then(resp => {
-          if (resp && resp.status === 200) {
-            cache.put(e.request, resp.clone());
-          }
-          return resp;
-        }).catch(() => hit);
-        return hit || net;
-      })
-    )
-  );
+
+  const isPage = e.request.mode === 'navigate' ||
+                 e.request.destination === 'document' ||
+                 e.request.url.endsWith('/') ||
+                 e.request.url.endsWith('.html');
+
+  if (isPage) {
+    e.respondWith(
+      fetch(e.request).then(resp => {
+        if (resp && resp.status === 200) {
+          const copy = resp.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+        }
+        return resp;
+      }).catch(() => caches.match(e.request))
+    );
+  } else {
+    e.respondWith(
+      caches.open(CACHE).then(cache =>
+        cache.match(e.request).then(hit => {
+          const net = fetch(e.request).then(resp => {
+            if (resp && resp.status === 200) cache.put(e.request, resp.clone());
+            return resp;
+          }).catch(() => hit);
+          return hit || net;
+        })
+      )
+    );
+  }
 });
